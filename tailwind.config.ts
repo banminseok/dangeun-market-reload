@@ -6,14 +6,11 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  theme: {
-    extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
-    },
-  },
+  theme: {},
   plugins: [],
+  "headwind.runOnSave": true,
+  "headwind.removeDuplicates": true,
 };
 export default config;
+
+
