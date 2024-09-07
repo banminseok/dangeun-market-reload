@@ -13,7 +13,9 @@ export default function Home() {
           </div>
         </div>
         )}
-
+        <div>
+          <input type="text"/>
+        </div>
       </div>
     </main>
   );
