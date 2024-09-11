@@ -1,9 +1,9 @@
 "use client"
 
-import FormButton from "@/components/form-btn";
-import FormInput from "@/components/form-input";
+import Button from "@/components/button";
+import Input from "@/components/input";
 import SocialLogin from "@/components/social-login";
-import { redirect } from "next/navigation";
+//import { redirect } from "next/navigation";
 import { useFormState } from "react-dom";
 import { handleForm } from "./actions";
 
