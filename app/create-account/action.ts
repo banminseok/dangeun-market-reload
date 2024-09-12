@@ -1,7 +1,11 @@
 "use server";
 import {z} from "zod";
+import bcrypt from "bcrypt";
 import { PASSWORD_MIN_LENGTH, PASSWORD_REGEX } from "../lib/constants";
 import db from "../lib/db";
+import { getIronSession } from "iron-session";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 interface ActionState{
   token : boolean
@@ -85,28 +89,34 @@ export async function createAccount(preState:ActionState, formData:FormData) {
   if(!result.success){
     return result.error.flatten();
   }else{
-    //console.log(result.data);
-   
-    //console.log(user);
-    if(user){
-      // show an error
-    }
-    const userEmail = await db.user.findUnique({
-      where : {
-        email: result.data.email,
-      },
-      select :{
-        id:true,
-      }
-    });
-    if(userEmail){
-      // show an error to the user
-    }
+    //console.log(result.data); 
     //check if the email is already used.
-    //hash password.
+    //hash password. 
+        //npm i bcrypt
+        //npm i @types/bcrypt
+        const hashedPassword =  await bcrypt.hash(result.data.password, 12);
     //savu the user to db
-    // log the user in
-
+    const user = await db.user.create({
+      data:{
+        username:result.data.username,
+        email:result.data.email,
+        password: hashedPassword,
+      },
+      select:{
+        id:true,
+      },
+    });
+    console.log(process.env.COOKIE_PASSWORD);
+    // log the user in ==> cookie({id:5})
+    //npm i iron-session
+    const cookie  = await getIronSession(cookies(),{
+      cookieName:"delicious-karrot",
+      password : process.env.COOKIE_PASSWORD!
+    });
+    //@ts-ignore
+    cookie.id = user.id;
+    await cookie.save();
+    redirect("/profile");
   }
 }
 
