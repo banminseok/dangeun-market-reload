@@ -1,25 +1,66 @@
 "use server";
 import {z} from "zod";
+import { PASSWORD_MIN_LENGTH, PASSWORD_REGEX } from "../lib/constants";
+import db from "../lib/db";
 
-const passwordRegex = new RegExp(
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*?[#?!@$%^&*-]).+$/
-); //banpa$$122A
+interface ActionState{
+  token : boolean
+}
+
+const checkPasswords=({
+  password, confirm_password,
+}:{
+  password: string; confirm_password:string;
+})=>password===confirm_password;
+
+const checkUniqueUsername = async(username:string)=>{
+ //check if username is taken.
+ const user = await db.user.findUnique({
+    where : {
+      username    //username: username,
+    },
+    select :{
+      id:true,
+    }
+  });
+    // if (user) {
+  //   return false;
+  // } else {
+  //   return true;
+  // }
+  return !Boolean(user);
+};
+const checkUniqueEmail = async (email: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      email,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return Boolean(user) === false;
+};
+
 
 const formSchema= z.object({
   username : z.string({
     invalid_type_error:"Username must be a string!",
     required_error:"Where is my username??",
   }).min(3,"Way too short!(username은 4자이상!)").max(10,"That is too looooo (10자 이하)")
-  .trim().toLowerCase().transform((username)=>`🔥 ${username}`)
+  .trim().toLowerCase()
+  //.transform((username)=>`🔥 ${username}`)
   .refine( (username) => !username.includes("potato"),
   "No potatoes allowed!"
-  ),
-  email : z.string().email().toLowerCase(),
-  password : z.string().min(4).regex(
-    passwordRegex,
+  )
+  .refine(checkUniqueUsername, "This username is already taken"),
+  email : z.string().email().toLowerCase()
+  .refine(checkUniqueEmail, "There is an account registered with that email."),
+  password : z.string().min(PASSWORD_MIN_LENGTH).regex(
+    PASSWORD_REGEX,
     "Passwords must contain at least one UPPERCASE, lowercase, number and special characters #?!@$%^&*-"
   ),
-  confirm_password : z.string().min(4),  
+  confirm_password : z.string().min(PASSWORD_MIN_LENGTH),  
 })
 .superRefine(({ password, confirm_password }, ctx) => {
   if (password !== confirm_password) {
@@ -31,20 +72,41 @@ const formSchema= z.object({
   }
 });
 
-export async function createAccount(preState:any, formData:FormData) {
+export async function createAccount(preState:ActionState, formData:FormData) {
   const data = {
     username : formData.get("username"),
     email : formData.get("email"),
     password : formData.get("password"),
-    confirm_password : formData.get("confirmPassword"),
+    confirm_password : formData.get("confirm_password"),
   }
-  console.log(data);
+  //console.log(data);
 
-  const result = formSchema.safeParse(data);
+  const result = await formSchema.safeParseAsync(data);
   if(!result.success){
     return result.error.flatten();
   }else{
-    console.log(result.data);
+    //console.log(result.data);
+   
+    //console.log(user);
+    if(user){
+      // show an error
+    }
+    const userEmail = await db.user.findUnique({
+      where : {
+        email: result.data.email,
+      },
+      select :{
+        id:true,
+      }
+    });
+    if(userEmail){
+      // show an error to the user
+    }
+    //check if the email is already used.
+    //hash password.
+    //savu the user to db
+    // log the user in
+
   }
 }
 

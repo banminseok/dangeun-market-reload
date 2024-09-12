@@ -39,3 +39,6 @@ next-env.d.ts
 
 
 .next
+.env
+*.db
+*.db-journal
