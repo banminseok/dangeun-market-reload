@@ -24,12 +24,13 @@ export async function middleware(request:NextRequest) {
     }
   } else {
     if (exists) {
+      console.log("go Products",request.nextUrl.pathname)
       return NextResponse.redirect(new URL("/products", request.url));
     }
   }
 }
 
 export const config={
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!_next/static|_next/image|images|favicon.ico).*)"],
   //matcher: ['profile', '/about/:path*', '/dashboard/:path*'],
 };
