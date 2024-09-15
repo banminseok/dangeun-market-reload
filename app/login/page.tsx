@@ -6,7 +6,7 @@ import SocialLogin from "@/components/social-login";
 //import { redirect } from "next/navigation";
 import { useFormState } from "react-dom";
 import { login } from "./actions";
-import { PASSWORD_MIN_LENGTH } from "../lib/constants";
+import { PASSWORD_MIN_LENGTH } from "../../lib/constants";
 
 
 export default function LogIn() {

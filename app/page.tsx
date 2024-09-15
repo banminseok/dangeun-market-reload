@@ -1,5 +1,5 @@
 import Link from "next/link"
-import "@/app/lib/db"
+import "@/lib/db"
 
 export default function Home() {
   return (
