@@ -1,10 +1,10 @@
 "use server";
 import {z} from "zod";
 import bcrypt from "bcrypt";
-import { PASSWORD_MIN_LENGTH, PASSWORD_REGEX } from "../../lib/constants";
-import db from "../../lib/db";
+import { PASSWORD_MIN_LENGTH, PASSWORD_REGEX } from "../../../lib/constants";
+import db from "../../../lib/db";
 import { redirect } from "next/navigation";
-import getSession from "../../lib/session";
+import getSession from "../../../lib/session";
 import updateSession from "@/lib/updateSession";
 
 interface ActionState{

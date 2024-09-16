@@ -2,9 +2,9 @@
 
 import bcrypt from "bcrypt";
 import { z } from "zod";
-import db from "../../lib/db";
-import { PASSWORD_MIN_LENGTH, PASSWORD_REGEX, PASSWORD_REGEX_ERROR } from "../../lib/constants";
-import getSession from '../../lib/session';
+import db from "../../../lib/db";
+import { PASSWORD_MIN_LENGTH, PASSWORD_REGEX, PASSWORD_REGEX_ERROR } from "../../../lib/constants";
+import getSession from '../../../lib/session';
 import { redirect } from "next/navigation";
 
 interface ActionState{
