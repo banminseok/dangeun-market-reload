@@ -25,6 +25,7 @@ export default function SMSLogin() {
         <Input name="token" type="number" placeholder='Verification code' 
           required 
           min={100000} max={999999}
+          errors={state.error?.formErrors}
         /> ) : (
           <Input name="phone" type="text" placeholder='Phone number' required errors={state.error?.formErrors} />
         )}
