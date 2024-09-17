@@ -29,5 +29,5 @@ const db = new PrismaClient();
  }
 
 
-test();
+//test();
 export default db;
